@@ -97,15 +97,15 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void control(String ID,String name,int zhi){
+    public void control(String ID,String name,int value){
         netWorkBusiness = new NetWorkBusiness(accessToken,"https://api.nlecloud.com");
-        netWorkBusiness.control(ID, name, zhi, new NCallBack<BaseResponseEntity>(getApplicationContext()) {
+        netWorkBusiness.control(ID, name, value, new NCallBack<BaseResponseEntity>(getApplicationContext()) {
             @Override
             protected void onResponse(BaseResponseEntity baseResponseEntity) {
                 if (baseResponseEntity.getStatus() == 0){
-                    if (name == "light" && zhi == 1){
+                    if (name == "light" && value == 1){
                         Toast.makeText(MainActivity.this, "灯光已开启。", Toast.LENGTH_SHORT).show();
-                    }else if (name == "light" && zhi == 0){
+                    }else if (name == "light" && value == 0){
                         Toast.makeText(MainActivity.this, "灯光已关闭", Toast.LENGTH_SHORT).show();
                     }
                 }else {
