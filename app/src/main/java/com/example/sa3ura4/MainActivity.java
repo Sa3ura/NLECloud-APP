@@ -45,12 +45,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 _user = user.getText().toString();
-                _pwd = pwd.getText().toString();
-                if (_user.equals("") || _pwd.equals("")){
-                    Toast.makeText(MainActivity.this, "用户名或密码不能为空!", Toast.LENGTH_SHORT).show();
-                }else {
-                    login();
-                }
+                _pwd = user.getText().toString();
+
+                netWorkBusiness = new NetWorkBusiness("","https://api.nlecloud.com");
+                netWorkBusiness.signIn(new SignIn(_user, _pwd), new NCallBack<BaseResponseEntity<User>>(getApplicationContext()) {
+                    @Override
+                    protected void onResponse(BaseResponseEntity<User> userBaseResponseEntity) {
+                        if (userBaseResponseEntity.getStatus() == 0){
+                            accessToken = userBaseResponseEntity.getResultObj().getAccessToken();
+                            Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                        }else {
+                            Toast.makeText(MainActivity.this, userBaseResponseEntity.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BaseResponseEntity<User>> call, Throwable t) {
+                        Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         light_ON.setOnClickListener(new View.OnClickListener() {
@@ -84,25 +97,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    public void login(){
-        netWorkBusiness = new NetWorkBusiness("","https://api.nlecloud.com");
-        netWorkBusiness.signIn(new SignIn(_user, _pwd), new NCallBack<BaseResponseEntity<User>>(getApplicationContext()) {
-            @Override
-            protected void onResponse(BaseResponseEntity<User> userBaseResponseEntity) {
-                if (userBaseResponseEntity.getStatus() == 0){
-                    accessToken = userBaseResponseEntity.getResultObj().getAccessToken();
-                    Toast.makeText(MainActivity.this, "Login Success.", Toast.LENGTH_SHORT).show();
-                }else {
-                    Toast.makeText(MainActivity.this, userBaseResponseEntity.getMsg(), Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BaseResponseEntity<User>> call, Throwable t) {
-                Toast.makeText(MainActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
     public void control(String ID,String name,int zhi){
         netWorkBusiness = new NetWorkBusiness(accessToken,"https://api.nlecloud.com");
         netWorkBusiness.control(ID, name, zhi, new NCallBack<BaseResponseEntity>(getApplicationContext()) {
@@ -127,13 +121,13 @@ public class MainActivity extends AppCompatActivity {
             protected void onResponse(BaseResponseEntity<List<SensorInfo>> listBaseResponseEntity) {
                 if (listBaseResponseEntity.getStatus() == 0){
                     List<SensorInfo> obj = listBaseResponseEntity.getResultObj();
-                    for (SensorInfo abc : obj){
-                        if (abc.getApiTag().equals("Temp")){
-                            String getTemp = abc.getValue();
+                    for (SensorInfo TH : obj){
+                        if (TH.getApiTag().equals("Temp")){
+                            String getTemp = TH.getValue();
                             Toast.makeText(MainActivity.this, "温度获取成功！", Toast.LENGTH_SHORT).show();
                             Temp.setText(getTemp+"℃");
-                        }if (abc.getApiTag().equals("Humi")){
-                            String getHumi = abc.getValue();
+                        }if (TH.getApiTag().equals("Humi")){
+                            String getHumi = TH.getValue();
                             Toast.makeText(MainActivity.this, "湿度获取成功！", Toast.LENGTH_SHORT).show();
                             Humi.setText(getHumi+"%RH");
                         }
