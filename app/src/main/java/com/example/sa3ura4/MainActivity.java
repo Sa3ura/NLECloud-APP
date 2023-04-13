@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void login(){
-        netWorkBusiness = new NetWorkBusiness("","http://api.nlecloud.com");
+        netWorkBusiness = new NetWorkBusiness("","https://api.nlecloud.com");
         netWorkBusiness.signIn(new SignIn(_user, _pwd), new NCallBack<BaseResponseEntity<User>>(getApplicationContext()) {
             @Override
             protected void onResponse(BaseResponseEntity<User> userBaseResponseEntity) {
@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void control(String ID,String name,int zhi){
-        netWorkBusiness = new NetWorkBusiness(accessToken,"http://api.nlecloud.com");
+        netWorkBusiness = new NetWorkBusiness(accessToken,"https://api.nlecloud.com");
         netWorkBusiness.control(ID, name, zhi, new NCallBack<BaseResponseEntity>(getApplicationContext()) {
             @Override
             protected void onResponse(BaseResponseEntity baseResponseEntity) {
@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     public void getTempHumi(String ID,String name){
-        netWorkBusiness = new NetWorkBusiness(accessToken,"http://api.nlecloud.com");
+        netWorkBusiness = new NetWorkBusiness(accessToken,"https://api.nlecloud.com");
         netWorkBusiness.getSensors(ID, name, new NCallBack<BaseResponseEntity<List<SensorInfo>>>(getApplicationContext()) {
             @Override
             protected void onResponse(BaseResponseEntity<List<SensorInfo>> listBaseResponseEntity) {
